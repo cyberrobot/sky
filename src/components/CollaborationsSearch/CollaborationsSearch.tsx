@@ -1,4 +1,3 @@
-import { useApiConfigStore } from '@/stores/useApiConfigStore';
 import { Person } from '@/types';
 import { getPerson, getPersons } from '@/utils/getPersons';
 import {
@@ -9,17 +8,13 @@ import {
   Image,
 } from '@mantine/core';
 import { useForm, isNotEmpty } from '@mantine/form';
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 const inputFieldStyle = {
   ['.mantine-InputWrapper-root']: {
     flexGrow: 2,
   },
-};
-
-const errorMessageStyle = {
-  marginTop: '10px',
-  color: 'red',
 };
 
 const buttonStyle = {
@@ -72,8 +67,8 @@ export default function CollaborationsSearch({
     setPersons({});
   };
 
-  const onChangeHandler = (value: string, key: string) => {
-    if (!value || value.length < 2) {
+  const onChangeHandler = useDebouncedCallback((value: string, key: string) => {
+    if (!value) {
       return;
     }
 
@@ -90,6 +85,16 @@ export default function CollaborationsSearch({
     };
 
     fetchPerson().catch(console.error);
+  }, 200);
+
+  const onItemSubmitHandler = (item: AutocompleteItemPlus, key: string) => {
+    setPersons({
+      ...persons,
+      [key]: {
+        id: item.id,
+        name: item.value,
+      },
+    });
   };
 
   return (
@@ -117,13 +122,7 @@ export default function CollaborationsSearch({
           }}
           onItemSubmit={(item: AutocompleteItemPlus) => {
             form.setFieldValue('name1', item.value);
-            setPersons({
-              ...persons,
-              name1: {
-                id: item.id,
-                name: item.value,
-              },
-            });
+            onItemSubmitHandler(item, 'name1');
           }}
           data={persons?.name1Suggestions || []}
         />
@@ -145,13 +144,7 @@ export default function CollaborationsSearch({
           }}
           onItemSubmit={(item: AutocompleteItemPlus) => {
             form.setFieldValue('name2', item.value);
-            setPersons({
-              ...persons,
-              name2: {
-                id: item.id,
-                name: item.value,
-              },
-            });
+            onItemSubmitHandler(item, 'name2');
           }}
           data={persons?.name2Suggestions || []}
         />
