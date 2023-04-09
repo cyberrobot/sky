@@ -4,8 +4,8 @@ import { useForm, isNotEmpty, TransformedValues } from '@mantine/form';
 import React, { useState } from 'react';
 
 const inputFieldStyle = {
-  ['.mantine-TextInput-wrapper']: {
-    width: '300px',
+  ['.mantine-InputWrapper-root']: {
+    flexGrow: 2,
   },
 };
 
@@ -63,12 +63,18 @@ export default function CollaborationsSearch({
 
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
-      <Flex gap="md" direction="row" wrap="wrap" align="top">
+      <Flex
+        gap="md"
+        direction="row"
+        wrap="wrap"
+        align="top"
+        justify="stretch"
+        sx={inputFieldStyle}
+      >
         <TextInput
           label="Name 1"
           {...form.getInputProps('name1')}
           placeholder={'Type name, e.g., "Al Pacino"'}
-          sx={inputFieldStyle}
         />
         <span
           style={{
@@ -82,7 +88,6 @@ export default function CollaborationsSearch({
           label="Name 2"
           {...form.getInputProps('name2')}
           placeholder={'Type name, e.g., "Robert De Niro"'}
-          sx={inputFieldStyle}
         />
         <Button
           variant="gradient"
