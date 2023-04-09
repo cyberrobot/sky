@@ -62,7 +62,12 @@ export default function CollaborationsSearch({
   };
 
   return (
-    <form onSubmit={form.onSubmit(onSubmitHandler)}>
+    <form
+      onSubmit={form.onSubmit(onSubmitHandler)}
+      style={{
+        marginBottom: '20px',
+      }}
+    >
       <Flex
         gap="md"
         direction="row"

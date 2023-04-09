@@ -1,16 +1,8 @@
-import {
-  Container,
-  Flex,
-  MantineProvider,
-  Rating,
-  StarIcon,
-} from '@mantine/core';
+import { Container, MantineProvider } from '@mantine/core';
 import { useState } from 'react';
-import { Movie } from './types';
 import { getMovies } from '@/utils/getMovies';
 import CollaborationsSearch from './components/CollaborationsSearch/CollaborationsSearch';
-import { StarSymbol } from './Icons/StarSymbol/StarSymbol';
-import CollaborationsItem from './components/CollaborationItem/CollaborationsItem';
+import CollaborationSearchResults from './components/CollaborationsSearchResults/CollaborationsSearchResults';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
@@ -29,9 +21,7 @@ export default function App() {
       <Container>
         <h1>Collaborations</h1>
         <CollaborationsSearch onSearchExternalHandler={onSearchHandler} />
-        {movies.map((movie: Movie) => (
-          <CollaborationsItem {...movie} />
-        ))}
+        <CollaborationSearchResults movies={movies} />
       </Container>
     </MantineProvider>
   );
