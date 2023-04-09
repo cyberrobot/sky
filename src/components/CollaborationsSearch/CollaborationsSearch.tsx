@@ -1,5 +1,6 @@
 import { getPersons } from '@/utils/getPersons';
 import { Button, Flex, TextInput } from '@mantine/core';
+import { useForm, isNotEmpty, TransformedValues } from '@mantine/form';
 import React, { useState } from 'react';
 
 const inputFieldStyle = {
@@ -9,35 +10,45 @@ const inputFieldStyle = {
 };
 
 const errorMessageStyle = {
-  marginTop: '10px', // Better use styled-components and access MantineProvider theme
+  marginTop: '10px',
   color: 'red',
+};
+
+const buttonStyle = {
+  marginTop: '24.8px',
 };
 
 interface CollaborationsSearchProps {
   onSearchExternalHandler: (name1Id: number, name2Id: number) => void;
 }
 
+interface FormValues {
+  name1: string;
+  name2: string;
+}
+
 export default function CollaborationsSearch({
   onSearchExternalHandler,
 }: CollaborationsSearchProps) {
-  const [searchTerm, setSearchTerm] = useState({
-    name1: '',
-    name2: '',
-  });
   const [persons, setPersons] = useState({
     name1: [],
     name2: [],
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const form = useForm({
+    initialValues: {
+      name1: '',
+      name2: '',
+    },
+    validate: {
+      name1: isNotEmpty('Please enter Name 1'),
+      name2: isNotEmpty('Please enter Name 2'),
+    },
+  });
 
-  const onClickHandler = () => {
-    if (!searchTerm.name1 || !searchTerm.name2) {
-      setErrorMessage('Please enter both names');
-      return;
-    }
-
+  const onSubmitHandler = (values: FormValues) => {
     const fetchPersons = async () => {
-      const data = await getPersons(searchTerm.name1, searchTerm.name2);
+      const data = await getPersons(values.name1, values.name2);
       setPersons({
         name1: data.name1,
         name2: data.name2,
@@ -51,48 +62,38 @@ export default function CollaborationsSearch({
   };
 
   return (
-    <>
-      <Flex gap="md" direction="row" wrap="wrap" align="end">
+    <form onSubmit={form.onSubmit(onSubmitHandler)}>
+      <Flex gap="md" direction="row" wrap="wrap" align="top">
         <TextInput
           label="Name 1"
-          value={searchTerm.name1}
-          onChange={(event) =>
-            setSearchTerm({
-              ...searchTerm,
-              name1: event.currentTarget.value,
-            })
-          }
+          {...form.getInputProps('name1')}
           placeholder={'Type name, e.g., "Al Pacino"'}
           sx={inputFieldStyle}
         />
         <span
           style={{
             lineHeight: '36px',
+            marginTop: '24.8px',
           }}
         >
           and
         </span>
         <TextInput
           label="Name 2"
-          value={searchTerm.name2}
-          onChange={(event) =>
-            setSearchTerm({
-              ...searchTerm,
-              name2: event.currentTarget.value,
-            })
-          }
+          {...form.getInputProps('name2')}
           placeholder={'Type name, e.g., "Robert De Niro"'}
           sx={inputFieldStyle}
         />
         <Button
           variant="gradient"
           gradient={{ from: 'indigo', to: 'cyan' }}
-          onClick={onClickHandler}
+          type="submit"
+          sx={buttonStyle}
         >
           Search
         </Button>
       </Flex>
       {errorMessage && <div style={errorMessageStyle}>{errorMessage}</div>}
-    </>
+    </form>
   );
 }
