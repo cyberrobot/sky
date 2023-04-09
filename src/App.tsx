@@ -1,11 +1,17 @@
 import { Container, MantineProvider } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getMovies } from '@/utils/getMovies';
 import CollaborationsSearch from './components/CollaborationsSearch/CollaborationsSearch';
 import CollaborationSearchResults from './components/CollaborationsSearchResults/CollaborationsSearchResults';
+import { useApiConfigStore } from './stores/useApiConfigStore';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
+  const setApiConfig = useApiConfigStore((state) => state.setApiConfig);
+
+  useEffect(() => {
+    setApiConfig();
+  }, []);
 
   const onSearchHandler = async (name1Id: number, name2Id: number) => {
     const fetchMovies = async () => {

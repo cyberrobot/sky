@@ -1,14 +1,8 @@
 import { config } from '@/config';
-
-interface ApiConfigResponse {
-  images: {
-    secure_base_url: string;
-    poster_sizes: string[];
-  };
-}
+import { ApiConfig } from '@/types';
 
 // TODO: Store in global state
-export const getApiConfig = async (): Promise<ApiConfigResponse> => {
+export const getApiConfig = async (): Promise<ApiConfig> => {
   const response = await fetch(`${config.apiUrl}/configuration`, {
     method: 'GET',
     headers: {

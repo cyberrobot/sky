@@ -6,3 +6,10 @@ export interface Movie {
   vote_average: number;
   poster_path: string;
 }
+
+export interface ApiConfig {
+  images: {
+    secure_base_url: string;
+    poster_sizes: string[];
+  };
+}

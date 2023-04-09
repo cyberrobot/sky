@@ -1,7 +1,6 @@
 import { Movie } from '@/types';
 import CollaborationsResultsItem from '@/components/CollaborationResultsItem/CollaborationResultsItem';
-import { useEffect, useState } from 'react';
-import { getApiConfig } from '@/utils/getApiConfig';
+import { useApiConfigStore } from '@/stores/useApiConfigStore';
 
 interface CollaborationsSearchResultsProps {
   movies: Movie[];
@@ -10,24 +9,16 @@ interface CollaborationsSearchResultsProps {
 export default function CollaborationSearchResults({
   movies,
 }: CollaborationsSearchResultsProps) {
-  const [staticResourcePath, setStaticResourcePath] = useState('');
-
-  useEffect(() => {
-    // TODO: Call once and store in global state
-    const fetchApiConfig = async () => {
-      const {
-        images: { secure_base_url, poster_sizes },
-      } = await getApiConfig();
-      const size = poster_sizes[poster_sizes.length - 1];
-      setStaticResourcePath(`${secure_base_url}${size}`);
-    };
-
-    fetchApiConfig().catch(console.error);
-  }, [movies.length]);
+  const apiConfig = useApiConfigStore((state) => state.config);
 
   return (
     <>
       {movies.map((movie: Movie) => {
+        const {
+          images: { secure_base_url, poster_sizes },
+        } = apiConfig;
+        const size = poster_sizes[poster_sizes.length - 1];
+        const staticResourcePath = `${secure_base_url}${size}`;
         movie.poster_path = `${staticResourcePath}${movie.poster_path}`;
         return <CollaborationsResultsItem {...movie} key={movie.id} />;
       })}
