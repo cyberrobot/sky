@@ -7,6 +7,11 @@ export interface Movie {
   poster_path: string;
 }
 
+export interface Person {
+  id: number;
+  name: string;
+}
+
 export interface ApiConfig {
   images: {
     secure_base_url: string;

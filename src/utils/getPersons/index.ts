@@ -1,4 +1,5 @@
 import { config } from '@/config';
+import { uniq } from '../data/uniq';
 
 export const getPersons = async (name1: string, name2: string) => {
   // Persons lookup
@@ -31,4 +32,21 @@ export const getPersons = async (name1: string, name2: string) => {
     name1: data.name1.results[0],
     name2: data.name2.results[0],
   };
+};
+
+export const getPerson = async (name: string) => {
+  const res = await fetch(
+    `${config.apiUrl}/search/person?language=en-US&query=${name}&page=1&include_adult=false`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: config.apiToken,
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  // Sanitize data by remove duplicates
+  return uniq(data.results, 'name');
 };
