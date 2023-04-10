@@ -1,4 +1,3 @@
-import { StarSymbol } from '@/Icons/StarSymbol/StarSymbol';
 import { Movie } from '@/types';
 import { getYearFromDate } from '@/utils/date/getYearFromDate';
 import { Flex, Image } from '@mantine/core';

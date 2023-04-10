@@ -1,4 +1,3 @@
-import React from 'react';
 import CollaborationsSearch from '@/components/CollaborationsSearch';
 import {
   act,
