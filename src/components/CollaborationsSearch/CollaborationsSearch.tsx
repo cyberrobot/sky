@@ -1,12 +1,7 @@
+import React from 'react';
 import { Person } from '@/types';
 import { getPerson, getPersons } from '@/utils/getPersons';
-import {
-  Button,
-  Flex,
-  Autocomplete,
-  AutocompleteItem,
-  Image,
-} from '@mantine/core';
+import { Button, Flex, Autocomplete, AutocompleteItem } from '@mantine/core';
 import { useForm, isNotEmpty } from '@mantine/form';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
@@ -22,7 +17,7 @@ const buttonStyle = {
 };
 
 interface CollaborationsSearchProps {
-  onSearchExternalHandler: (name1Id: number, name2Id: number) => void;
+  onSearchExternalHandler?: (name1Id: number, name2Id: number) => void;
 }
 
 interface FormValues {
@@ -35,8 +30,6 @@ interface AutocompleteItemPlus extends AutocompleteItem {
 }
 
 interface PersonsState {
-  name1?: Person;
-  name2?: Person;
   name1Suggestions?: AutocompleteItem[];
   name2Suggestions?: AutocompleteItem[];
 }
@@ -45,6 +38,7 @@ export default function CollaborationsSearch({
   onSearchExternalHandler,
 }: CollaborationsSearchProps) {
   const [persons, setPersons] = useState<PersonsState>();
+  // Initiate form values and validation
   const form = useForm({
     initialValues: {
       name1: '',
@@ -56,17 +50,27 @@ export default function CollaborationsSearch({
     },
   });
 
+  /* 
+    This function validates form field values by calling the api,
+    returned person objects are used to get the movie list
+  */
   const onSubmitHandler = (values: FormValues) => {
     const fetchPersons = async () => {
       const data = await getPersons(values.name1, values.name2);
 
-      await onSearchExternalHandler(data.name1.id, data.name2.id);
+      if (onSearchExternalHandler) {
+        await onSearchExternalHandler(data.name1.id, data.name2.id);
+      }
     };
 
     fetchPersons().catch(console.error);
-    setPersons({});
   };
 
+  /* 
+    This function is called on the form field change 
+    and calls the api to get the person list. To reduce the number of api calls,
+    the function is debounced by 200ms.  
+  */
   const onChangeHandler = useDebouncedCallback((value: string, key: string) => {
     if (!value) {
       return;
@@ -75,6 +79,7 @@ export default function CollaborationsSearch({
     const fetchPerson = async () => {
       const data = await getPerson(value);
 
+      // Create an AutoCompleteItem array from the Person array
       setPersons({
         ...persons,
         [`${key}Suggestions`]: data.map((person: Person) => ({
@@ -86,16 +91,6 @@ export default function CollaborationsSearch({
 
     fetchPerson().catch(console.error);
   }, 200);
-
-  const onItemSubmitHandler = (item: AutocompleteItemPlus, key: string) => {
-    setPersons({
-      ...persons,
-      [key]: {
-        id: item.id,
-        name: item.value,
-      },
-    });
-  };
 
   return (
     <form
@@ -122,7 +117,6 @@ export default function CollaborationsSearch({
           }}
           onItemSubmit={(item: AutocompleteItemPlus) => {
             form.setFieldValue('name1', item.value);
-            onItemSubmitHandler(item, 'name1');
           }}
           data={persons?.name1Suggestions || []}
         />
@@ -144,7 +138,6 @@ export default function CollaborationsSearch({
           }}
           onItemSubmit={(item: AutocompleteItemPlus) => {
             form.setFieldValue('name2', item.value);
-            onItemSubmitHandler(item, 'name2');
           }}
           data={persons?.name2Suggestions || []}
         />
