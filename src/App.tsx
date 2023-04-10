@@ -5,9 +5,10 @@ import CollaborationsSearch from './components/CollaborationsSearch';
 import CollaborationSearchResults from './components/CollaborationsSearchResults';
 import { useApiConfigStore } from './stores/useApiConfigStore';
 import { registerApiInterceptors } from './config';
+import { Movie } from './types';
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const setApiConfig = useApiConfigStore((state) => state.setApiConfig);
 
   useEffect(() => {
@@ -16,6 +17,21 @@ export default function App() {
   }, []);
 
   const onSearchHandler = async (name1Id: number, name2Id: number) => {
+    if (!name1Id || !name2Id) {
+      setMovies([
+        {
+          id: 0,
+          title: 'No results found. Enter valid names.',
+          poster_path: '',
+          vote_average: 0,
+          vote_count: 0,
+          overview: '',
+          release_date: '',
+        },
+      ]);
+      return;
+    }
+
     const fetchMovies = async () => {
       const movies = await getMovies(name1Id, name2Id);
       setMovies(movies);
@@ -29,7 +45,11 @@ export default function App() {
       <Container>
         <h1>Collaborations</h1>
         <CollaborationsSearch onSearchExternalHandler={onSearchHandler} />
-        <CollaborationSearchResults movies={movies} />
+        {movies[0]?.id !== 0 ? (
+          <CollaborationSearchResults movies={movies} />
+        ) : (
+          <p>{movies[0]?.title}</p>
+        )}
       </Container>
     </MantineProvider>
   );

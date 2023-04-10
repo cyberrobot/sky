@@ -59,7 +59,7 @@ export default function CollaborationsSearch({
       const data = await getPersons(values.name1, values.name2);
 
       if (onSearchExternalHandler) {
-        await onSearchExternalHandler(data.name1.id, data.name2.id);
+        await onSearchExternalHandler(data.name1?.id, data.name2?.id);
       }
     };
 
