@@ -27,14 +27,30 @@ export default function CollaborationsResultsItem(movie: Movie) {
             <span
               style={{
                 marginLeft: '4px',
+                marginRight: '8px',
               }}
             >
               {movie.vote_average}
+            </span>
+            <span
+              style={{
+                color: '#ccc',
+              }}
+            >
+              |
+            </span>
+            <span
+              style={{
+                marginLeft: '8px',
+              }}
+            >
+              Votes: {movie.vote_count}
             </span>
           </Flex>
           <div
             style={{
               marginTop: '8px',
+              marginBottom: '8px',
             }}
           >
             {movie.overview}
