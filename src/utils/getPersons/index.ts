@@ -1,6 +1,6 @@
 import { config } from '@/config';
 import { Person } from '@/types';
-import { uniq } from '../data/uniq';
+import { uniqObjByKey } from '../data/uniq';
 
 export const getPersons = async (name1: string, name2: string) => {
   // Persons lookup
@@ -29,5 +29,5 @@ export async function getPerson(name: string): Promise<Person[]> {
   const data = await res.json();
 
   // Sanitize data by remove duplicates
-  return uniq(data.results, 'name');
+  return uniqObjByKey(data.results, 'name');
 }
