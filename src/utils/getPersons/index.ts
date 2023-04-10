@@ -17,13 +17,7 @@ export const getPersons = async (name1: string, name2: string) => {
 
 export async function getPerson(name: string): Promise<Person[]> {
   const res = await fetch(
-    `${config.apiUrl}/search/person?language=en-US&query=${name}&page=1&include_adult=false`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: config.apiToken,
-      },
-    }
+    `${config.apiUrl}/search/person?language=en-US&query=${name}&page=1&include_adult=false`
   );
 
   const data = await res.json();

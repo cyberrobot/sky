@@ -4,12 +4,14 @@ import { getMovies } from '@/utils/getMovies';
 import CollaborationsSearch from './components/CollaborationsSearch';
 import CollaborationSearchResults from './components/CollaborationsSearchResults';
 import { useApiConfigStore } from './stores/useApiConfigStore';
+import { registerApiInterceptors } from './config';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
   const setApiConfig = useApiConfigStore((state) => state.setApiConfig);
 
   useEffect(() => {
+    registerApiInterceptors();
     setApiConfig();
   }, []);
 
