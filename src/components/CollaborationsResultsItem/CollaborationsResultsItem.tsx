@@ -1,10 +1,7 @@
 import { StarSymbol } from '@/Icons/StarSymbol/StarSymbol';
 import { Movie } from '@/types';
+import { getYearFromDate } from '@/utils/date/getYearFromDate';
 import { Flex, Image } from '@mantine/core';
-
-const getReleaseYear = (releaseDate: string) => {
-  return new Date(releaseDate).getFullYear();
-};
 
 const sectionStyle = {
   borderBottom: '1px solid #eee',
@@ -23,7 +20,7 @@ export default function CollaborationsResultsItem(movie: Movie) {
               marginBottom: '4px',
             }}
           >
-            {movie.title} ({getReleaseYear(movie.release_date)})
+            {movie.title} ({getYearFromDate(movie.release_date)})
           </h3>
           <Flex align="center">
             <StarSymbol color="yellow" size="md" type="full" />
