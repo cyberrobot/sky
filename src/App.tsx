@@ -1,8 +1,8 @@
 import { Container, MantineProvider } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { getMovies } from '@/utils/getMovies';
-import CollaborationsSearch from './components/CollaborationsSearch/CollaborationsSearch';
-import CollaborationSearchResults from './components/CollaborationsSearchResults/CollaborationsSearchResults';
+import CollaborationsSearch from './components/CollaborationsSearch';
+import CollaborationSearchResults from './components/CollaborationsSearchResults';
 import { useApiConfigStore } from './stores/useApiConfigStore';
 
 export default function App() {

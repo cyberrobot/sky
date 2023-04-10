@@ -1,5 +1,5 @@
 import { Movie } from '@/types';
-import CollaborationsResultsItem from '@/components/CollaborationResultsItem/CollaborationResultsItem';
+import CollaborationsResultsItem from '@/components/CollaborationsResultsItem';
 import { useApiConfigStore } from '@/stores/useApiConfigStore';
 
 interface CollaborationsSearchResultsProps {
